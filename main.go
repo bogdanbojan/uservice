@@ -1,11 +1,21 @@
 package main
 
 import (
-	"github.com/ardanlabs/conf"
-	"github.com/dimfeld/httptreemux/v5"
+	"log"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
+var build = "develop"
+
 func main() {
-	conf.New()
-	httptreemux.New()
+	log.Println("starting service", build)
+	defer log.Println("service ended")
+
+	shutdown := make(chan os.Signal, 1)
+	signal.Notify(shutdown, syscall.SIGINT, syscall.SIGTERM)
+	<-shutdown
+
+	log.Println("stopping service")
 }
