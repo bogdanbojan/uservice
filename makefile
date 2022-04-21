@@ -1,7 +1,10 @@
-SHELL := cmd
+SHELL := /bin/bash
 
 run:
 	go run main.go
+
+build:
+	go build -ldflags "-X main.build=local"
 
 # ==============================================================================
 # Building containers
@@ -13,16 +16,18 @@ all: service
 
 service:
 	docker build \
-		-f zarf/docker/dockerfile \
+		-f zarf/docker/dockerfile  \
 		-t service-amd64:$(VERSION) \
 		--build-arg BUILD_REF=$(VERSION) \
-		--build-arg BUILD_DATE="echo %date%-%time%" \
+		--build-arg BUILD_DATE="%Y-%m-%dT%H:%M:%SZ" \
 		.
+
+# build date in sh:  `date -u +"%Y-%m-%dT%H:%M:%SZ"`
 
 # ==============================================================================
 # Running from within k8s/kind
 
-KIND_CLUSTER := bbojan-starter-cluster
+KIND_CLUSTER := bojan-starter-cluster
 
 # Upgrade to latest Kind (>=v0.11): e.g. brew upgrade kind
 # For full Kind v0.11 release notes: https://github.com/kubernetes-sigs/kind/releases/tag/v0.11.0
@@ -42,7 +47,7 @@ kind-load:
 	kind load docker-image service-amd64:$(VERSION) --name $(KIND_CLUSTER)
 
 kind-apply:
-	type  zarf\k8s\base\service-pod\base-service.yaml | kubectl apply -f -
+	cat  zarf\k8s\base\service-pod\base-service.yaml | kubectl apply -f -
 
 kind-status:
 	kubectl get nodes -o wide
@@ -50,7 +55,7 @@ kind-status:
 	kubectl get pods -o wide --watch --all-namespaces
 
 kind-logs:
-	kubectl logs -l app=sales --all-containers=true -f --tail=100 --namespace=service-system
+	kubectl logs -l app=service --all-containers=true -f --tail=100 --namespace=service-system
 
 kind-restart:
 	kubectl rollout restart deployment service-pod --namespace=service-system
