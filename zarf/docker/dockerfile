@@ -15,6 +15,7 @@ ARG BUILD_DATE
 ARG BUILD_REF
 COPY --from=build_sales-api /service /service/service
 WORKDIR /service/service
+# It's called uservice because of the project folder name.
 CMD ["./uservice"]
 
 LABEL org.opencontainers.image.created="${BUILD_DATE}" \
