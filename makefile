@@ -67,5 +67,14 @@ kind-restart:
 
 kind-update: all kind-load kind-restart
 
+kind-update-apply: all kind-load kind-apply
+
 kind-describe:
 	kubectl describe pod -l app=service
+
+# ==============================================================================
+# Modules support
+
+tidy:
+	go mod tidy
+	go mod vendor
