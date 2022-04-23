@@ -6,17 +6,17 @@ ARG BUILD_REF
 COPY . /service
 
 # Build the service binary.
-WORKDIR /service
+WORKDIR /service/app/services/sales-api
 RUN go build -ldflags "-X main.build=${BUILD_REF}"
 
 # Run the Go Binary in Alpine.
 FROM alpine:3.15
 ARG BUILD_DATE
 ARG BUILD_REF
-COPY --from=build_sales-api /service /service/service
-WORKDIR /service/service
+COPY --from=build_sales-api  /service/app/services/sales-api/sales-api /service/sales-api
+WORKDIR /service
 # It's called uservice because of the project folder name.
-CMD ["./uservice"]
+CMD ["./sales-api"]
 
 LABEL org.opencontainers.image.created="${BUILD_DATE}" \
       org.opencontainers.image.title="sales-api" \

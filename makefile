@@ -12,11 +12,11 @@ build:
 # $(shell git rev-parse --short HEAD)
 VERSION := 1.0
 
-all: service
+all: sales-api
 
-service:
+sales-api:
 	docker build \
-		-f zarf/docker/dockerfile \
+		-f zarf/docker/dockerfile.sales-api \
 		-t service-amd64:$(VERSION) \
 		--build-arg BUILD_REF=$(VERSION) \
 		--build-arg BUILD_DATE=date \
