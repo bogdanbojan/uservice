@@ -44,6 +44,7 @@ kind-up:
 kind-down:
 	kind delete cluster --name $(KIND_CLUSTER)
 
+# For some reason, if I do the individual commands it works. Otherwise, when I do `make kind-load` it throws `The system cannot find the path specified.`
 kind-load:
 	cd zarf/k8s/kind/sales-pod; kustomize edit set image sales-api-image=sales-api-amd64:$(VERSION)
 	kind load docker-image sales-api-amd64:$(VERSION) --name $(KIND_CLUSTER)
