@@ -21,6 +21,7 @@ sales-api:
 		--build-arg BUILD_DATE=date \
 		.
 
+# TODO
 # Build date in sh:  `date -u +"%Y-%m-%dT%H:%M:%SZ"`
 # Right now, the metadata just says `date` in the `org.opencontainers.image.created` field.
 
